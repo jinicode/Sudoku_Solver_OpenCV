@@ -1,37 +1,41 @@
 import sys
 import time
-
+import cv2
 from tensorflow.keras.models import load_model
-
 from settings import *
-from src.extract_n_solve.extract_digits import process_extract_digits
-from src.extract_n_solve.grid_detector import main_grid_detector_img
-from src.extract_n_solve.grid_solver import main_solve_grids
-from src.extract_n_solve.new_img_generator import *
-
+from extract_digits import process_extract_digits
+from grid_detector import main_grid_detector
+from grid_solver import main_solve_grids
+from new_img_generator import *
 from os import walk
-
 
 save_folder = "images_save/"
 
 
-def main_process_img(im_path, model, save=False, use_hough=True, save_images_digit=False):
+def process_main_img(im_path, model, save=False):
     init = time.time()
     frame = cv2.imread(im_path)
     init0 = time.time()
     if frame is None:
         print("This path doesn't lead to a frame")
         sys.exit(3)
-
-    im_grids_final, points_grids, list_transform_matrix = main_grid_detector_img(frame,
-                                                                                 use_hough=use_hough)
+    print("")
+    im_grids_final, points_grids, list_transform_matrix = main_grid_detector(
+        frame)
+    print("im_grids_final")
+    print(im_grids_final)
+    print(len(im_grids_final[0]))
+    print("points_grids")
+    print(len(points_grids[0]))
+    print("list_transform_matrix")
+    print(len(list_transform_matrix[0]))
     found_grid_time = time.time()
     if im_grids_final is None:
         print("No grid found")
         sys.exit(3)
     print("Grid(s) found")
-    grids_matrix = process_extract_digits(im_grids_final, model, display_digit=False,
-                                          save_images_digit=save_images_digit)
+    grids_matrix = process_extract_digits(im_grids_final, model
+                                          )
     if all(elem is None for elem in grids_matrix):
         print("Failed during digits extraction")
         sys.exit(3)

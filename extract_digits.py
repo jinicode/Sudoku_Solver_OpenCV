@@ -2,22 +2,21 @@ import cv2
 import numpy as np
 
 from settings import *
-from src.solving_objects.Sudoku import verify_viable_grid
+from Sudoku import verify_viable_grid
 
 
-def process_extract_digits(ims, model, display_digit=False, save_images_digit=False):
+def process_extract_digits(img_grids, model):
     grids = []
-    # display_digit=True
-    for img in ims:
-        grids.append(process_extract_digits_single(img, model, display_digit=display_digit,
-                                                   save_image_digits=save_images_digit))
+
+    for img in img_grids:
+        grids.append(process_extract_digits_single(img, model
+                                                   ))
         # cv2.waitKey(0)
 
     return grids
 
 
 def preprocessing_im_grid(img):
-
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray_enhance = (gray - gray.min()) * int(255 / (gray.max() - gray.min()))
     blurred = cv2.GaussianBlur(gray_enhance, (11, 11), 0)
@@ -40,7 +39,7 @@ def fill_numeric_grid(preds, loc_digits, h_im, w_im):
     return grid
 
 
-def process_extract_digits_single(img, model, display=False, display_digit=False, save_image_digits=False):
+def process_extract_digits_single(img, model, display=False):
     h_im, w_im = img.shape[:2]
     im_prepro, gray_enhance = preprocessing_im_grid(img)
     im_contours = img.copy()
@@ -87,11 +86,11 @@ def process_extract_digits_single(img, model, display=False, display_digit=False
             nbr_digits_extracted += 1
         else:
             preds.append(-1)
-    for i in range(len(preds)):
-        y, x = loc_digits[i]
-        cv2.imshow('pred_{} - {:.6f} - x/y : {}/{}'.format(preds[i], 100 * max(preds_proba[i]), int(x), int(y)),
-                   img_digits[i])
-        cv2.waitKey()
+    # for i in range(len(preds)):
+    #     y, x = loc_digits[i]
+    #     cv2.imshow('pred_{} - {:.6f} - x/y : {}/{}'.format(preds[i], 100 * max(preds_proba[i]), int(x), int(y)),
+    #                img_digits[i])
+    #     cv2.waitKey()
     if nbr_digits_extracted < min_digits_extracted:
 
         cv2.imshow("im_contours", im_contours)

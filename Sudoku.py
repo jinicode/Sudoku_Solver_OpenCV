@@ -1,9 +1,6 @@
 import numpy as np
 
 
-# from src.fonctions import timer_decorator
-
-
 class Sudoku:
     def __init__(self, sudo=None, grid=None):
         self.possible_values_grid = np.empty((9, 9), dtype=list)

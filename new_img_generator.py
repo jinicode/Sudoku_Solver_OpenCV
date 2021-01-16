@@ -11,7 +11,6 @@ thickness = 2
 
 
 def recreate_img_filled(frame, im_grids, points_grids, list_transform_matrix, ratio=None):
-    # from src.fonctions import resize
 
     target_h, target_w = frame.shape[:2]
     if ratio:

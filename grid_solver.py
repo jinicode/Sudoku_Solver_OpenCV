@@ -1,4 +1,4 @@
-from src.solving_objects.Sudoku import *
+from Sudoku import *
 
 
 def solve_grid(sudo):  # Return if grid is solved
