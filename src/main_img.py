@@ -8,7 +8,7 @@ from src.extract_n_solve.extract_digits import process_extract_digits
 from src.extract_n_solve.grid_detector import main_grid_detector_img
 from src.extract_n_solve.grid_solver import main_solve_grids
 from src.extract_n_solve.new_img_generator import *
-from src.useful_functions import my_resize
+
 from os import walk
 
 
@@ -22,9 +22,6 @@ def main_process_img(im_path, model, save=False, use_hough=True, save_images_dig
     if frame is None:
         print("This path doesn't lead to a frame")
         sys.exit(3)
-    # if frame.shape[0] > 1000 or frame.shape[0] < 800:
-    #     frame = my_resize(frame, width=param_resize_width,
-    #                       height=param_resize_height)
 
     im_grids_final, points_grids, list_transform_matrix = main_grid_detector_img(frame,
                                                                                  use_hough=use_hough)
