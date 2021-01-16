@@ -7,81 +7,30 @@ from numpy import pi
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 tensorflow.compat.v1.logging.set_verbosity(tensorflow.compat.v1.logging.ERROR)
 
-
-# ----TEXT DISPLAY----#
-RED = (0, 0, 255)
-PURPLE = (255, 0, 255)
-ORANGE = (0, 127, 255)
-GREEN = (0, 255, 0)
-BLUE = (255, 0, 0)
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-font = FONT_HERSHEY_SIMPLEX
-font_scale_normal = 2.0
-font_scale_small = 1.1
-thickness_normal = 3
-thickness_small = 2
-# ----RESIZE----#
-param_resize_height = 900
-param_resize_width = 1600
-resize_height_hough = 360
-resize_width_hough = 640
-
-output_width = 1365  # 853
-output_height = 768  # 480
-
-ratio_resize_hough = float(param_resize_height) / resize_height_hough
-
 # ----PREPRO BIG IMAGE----#
 block_size_big = 41
-block_size_webcam_big = 21
 mean_sub_big = 15
-mean_sub_webcam_big = 5
 
-# display_prepro_big = True
-display_prepro_big = False
 
 # ----GRID COUNTOURS----#
 ratio_lim = 2
 smallest_area_allow = 75000
 approx_poly_coef = 0.1
 
-# ----GRID UPDATE AND SIMILARITY----#
-lim_apparition_not_solved = 12
-lim_apparition_solved = 60
-same_grid_dist_ratio = 0.05
 
 target_h_grid, target_w_grid = 450, 450
 
-# ----HOUGH----#
-thresh_hough = 500
-# thresh_hough_p = 170
-# minLineLength_h_p = 5
-# maxLineGap_h_p = 5
-# hough_rho = 3
-# hough_theta = 3 * pi / 180
-thresh_hough_p = 100
-minLineLength_h_p = 5
-maxLineGap_h_p = 5
-hough_rho = 3
-hough_theta = 3 * pi / 180
-
-# display_line_on_edges = True
-display_line_on_edges = False
 
 # ----PREPRO IMAGE DIGIT----#
 block_size_grid = 29  # 43
-block_size_webcam_grid = 25
-mean_sub_grid = 25
-mean_sub_webcam_grid = 5
 
-# display_prepro_grid = True
-display_prepro_grid = False
+mean_sub_grid = 25
+
 
 # ----DIGITS EXTRACTION----#
 thresh_conf_cnn = 0.98
 thresh_conf_cnn_high = 0.99
-digits_2_check = 12
+
 
 lim_bord = 10
 thresh_h_low = 15
