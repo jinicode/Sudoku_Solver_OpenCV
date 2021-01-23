@@ -104,7 +104,7 @@ def get_corners(preprocessed_img):
 def undistorted_grids(frame, extreme_points):
     print("undistorted_grids")
     undistorted = []
-    true_points_grids = []
+    true_pointGrid = []
     transform_matrix = []
     for points_grid in extreme_points:
         points_grid = np.array(points_grid, dtype=np.float32)
@@ -117,19 +117,19 @@ def undistorted_grids(frame, extreme_points):
             frame, M, (target_w_grid, target_h_grid)))
         cv2.imshow("test", undistorted[-1])
         cv2.waitKey()
-        true_points_grids.append(points_grid)
+        true_pointGrid.append(points_grid)
         transform_matrix.append(np.linalg.inv(M))
     print("undistorted")
     print(len(undistorted))
-    print("true_points_grids")
-    print(len(true_points_grids))
+    print("true_pointGrid")
+    print(len(true_pointGrid))
     print("transform_matrix")
     print(len(transform_matrix))
 
-    return undistorted, true_points_grids, transform_matrix
+    return undistorted, true_pointGrid, transform_matrix
 
 
-def main_grid_detector(frame):
+def grid_detector(frame):
 
     preprocessed_img = preprocess_img(frame)
     # here we have black and white preprocessed image
@@ -140,6 +140,6 @@ def main_grid_detector(frame):
     if extreme_points is None:
         print("contours cannot be detected")
         return None, None, None
-    grids_final, points_grids, transform_matrix = undistorted_grids(
+    grids_final, pointGrid, transform_matrix = undistorted_grids(
         frame, extreme_points)
-    return grids_final, points_grids, transform_matrix
+    return grids_final, pointGrid, transform_matrix

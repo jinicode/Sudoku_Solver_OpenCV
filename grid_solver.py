@@ -28,7 +28,7 @@ def solve_grid(sudo):  # Return if grid is solved
     return True, sudo
 
 
-def main_solve_grids(grids):
+def solve_grids(grids):
     finished_grids = []
     for grid in grids:
         finished_grids.append(main_solve_grid(grid))

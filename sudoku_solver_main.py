@@ -39,8 +39,8 @@ def main_function():
     args, model = setting_args()
     if args.i_path.endswith(tuple(images_extension)):
         print("calling main_img")
-        from main_img import process_main_img
-        process_main_img(args.i_path, model, args.save)
+        from main_img import main_img
+        main_img(args.i_path, model, args.save)
     else:
         print("\nCannot identify File type\nLeaving...")
         sys.exit(3)

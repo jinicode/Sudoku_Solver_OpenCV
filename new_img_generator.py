@@ -10,19 +10,19 @@ font_scale = 1.2
 thickness = 2
 
 
-def recreate_img_filled(frame, im_grids, points_grids, list_transform_matrix, ratio=None):
+def recreate_img_filled(frame, im_grids, pointGrid, transform_matrix, ratio=None):
 
     target_h, target_w = frame.shape[:2]
     if ratio:
         im_final = frame.copy()
-        for i, points_grid in enumerate(points_grids):
-            points_grids[i] = np.array(points_grid, dtype=np.float32) * ratio
+        for i, points_grid in enumerate(pointGrid):
+            pointGrid[i] = np.array(points_grid, dtype=np.float32) * ratio
     else:
         im_final = frame
     new_im = np.zeros((frame.shape[0], frame.shape[1], 3), np.uint8)
     # t0 = time.time()
 
-    for im_grid, points_grid, transform_matrix in zip(im_grids, points_grids, list_transform_matrix):
+    for im_grid, points_grid, transform_matrix in zip(im_grids, pointGrid, transform_matrix):
         if im_grid is None:
             for point in points_grid:
                 x, y = point

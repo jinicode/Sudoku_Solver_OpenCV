@@ -5,18 +5,18 @@ from settings import *
 from Sudoku import verify_viable_grid
 
 
-def process_extract_digits(img_grids, model):
+def extract_digits(img_grids, model):
     grids = []
 
     for img in img_grids:
-        grids.append(process_extract_digits_single(img, model
-                                                   ))
+        grids.append(extract_digits_single(img, model
+                                           ))
         # cv2.waitKey(0)
 
     return grids
 
 
-def preprocessing_im_grid(img):
+def processing_im_grid(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray_enhance = (gray - gray.min()) * int(255 / (gray.max() - gray.min()))
     blurred = cv2.GaussianBlur(gray_enhance, (11, 11), 0)
@@ -26,7 +26,7 @@ def preprocessing_im_grid(img):
     return thresh, gray_enhance
 
 
-def fill_numeric_grid(preds, loc_digits, h_im, w_im):
+def fill_grid(preds, loc_digits, h_im, w_im):
     grid = np.zeros((9, 9), dtype=int)
 
     for pred, loc in zip(preds, loc_digits):
@@ -39,9 +39,9 @@ def fill_numeric_grid(preds, loc_digits, h_im, w_im):
     return grid
 
 
-def process_extract_digits_single(img, model, display=False):
+def extract_digits_single(img, model, display=False):
     h_im, w_im = img.shape[:2]
-    im_prepro, gray_enhance = preprocessing_im_grid(img)
+    im_prepro, gray_enhance = processing_im_grid(img)
     im_contours = img.copy()
     contours, _ = cv2.findContours(
         im_prepro, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -96,7 +96,7 @@ def process_extract_digits_single(img, model, display=False):
         cv2.imshow("im_contours", im_contours)
         cv2.waitKey()
         return None
-    grid = fill_numeric_grid(preds, loc_digits, h_im, w_im)
+    grid = fill_grid(preds, loc_digits, h_im, w_im)
     if verify_viable_grid(grid):
         print("verify_viable_grid")
         return grid
