@@ -17,7 +17,7 @@ def parser_generation():
     parser.add_argument("-p", "--profile", type=int, choices=[1], default=1)
     parser.add_argument("-mp", "--model_path", type=str,
                         default='model/my_model.h5')
-    parser.add_argument("-s", "--save", type=int, choices=[1], default=1)
+
     parser.add_argument("-d", "--display",
                         help="display output detail", action="store_true")
     args = parser.parse_args()

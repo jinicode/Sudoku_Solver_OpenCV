@@ -20,11 +20,10 @@ def solve_grid(sudo):  # Return if grid is solved
         else:
             ret = sudo.apply_unique_possibilities()
             if ret is False:
-                # print(sudo)
-                # print("ARF")
+
                 del sudo
                 return False, None
-    # print("COMING HOME")
+
     return True, sudo
 
 

@@ -11,19 +11,14 @@ tensorflow.compat.v1.logging.set_verbosity(tensorflow.compat.v1.logging.ERROR)
 block_size_big = 41
 mean_sub_big = 15
 
-
 # ----GRID COUNTOURS----#
 ratio_lim = 2
 smallest_area_allow = 75000
 approx_poly_coef = 0.1
-
-
 target_h_grid, target_w_grid = 450, 450
-
 
 # ----PREPRO IMAGE DIGIT----#
 block_size_grid = 29  # 43
-
 mean_sub_grid = 25
 
 

@@ -22,7 +22,6 @@ def recreate_img_filled(frame, im_grids, pointGrid, transform_matrix, ratio=None
     else:
         im_final = frame
     new_im = np.zeros((frame.shape[0], frame.shape[1], 3), np.uint8)
-    # t0 = time.time()
 
     for im_grid, points_grid, transform_matrix in zip(im_grids, pointGrid, transform_matrix):
         if im_grid is None:
@@ -31,7 +30,7 @@ def recreate_img_filled(frame, im_grids, pointGrid, transform_matrix, ratio=None
                 cv2.circle(new_im, (x, y), 6, (255, 0, 0), 3)
 
         else:
-            # grid_h, grid_w = im_grid.shape[:2]
+
             if ratio:
                 init_pts = np.array([[0, 0], [target_w_grid - 1, 0], [target_w_grid - 1, target_h_grid - 1],
                                      [0, target_h_grid - 1]], dtype=np.float32)
@@ -41,18 +40,10 @@ def recreate_img_filled(frame, im_grids, pointGrid, transform_matrix, ratio=None
             new_im = cv2.add(new_im, cv2.warpPerspective(
                 im_grid, transform_matrix, (target_w, target_h)))
 
-    # t1 = time.time()
     _, mask = cv2.threshold(cv2.cvtColor(
         new_im, cv2.COLOR_BGR2GRAY), 1, 255, cv2.THRESH_BINARY)
-    # t2 = time.time()
     im_final = cv2.bitwise_and(im_final, im_final, mask=cv2.bitwise_not(mask))
-    # t3 = time.time()
     im_final = cv2.add(im_final, new_im)
-    # t4 = time.time()
-    # print(t1 - t0)
-    # print(t2 - t1)
-    # print(t3 - t2)
-    # print(t4 - t3)
 
     return im_final
 

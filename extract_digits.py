@@ -12,7 +12,6 @@ def extract_digits(img_grids, model):
         grids.append(extract_digits_single(img, model
                                            ))
         # cv2.waitKey(0)
-
     return grids
 
 

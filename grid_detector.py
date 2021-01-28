@@ -6,10 +6,6 @@ import numpy as np
 from settings import *
 
 
-def nothing(x):
-    pass
-
-
 def preprocess_img(frame):
     print("preprocess_img called")
     # dilates the image to increase white color

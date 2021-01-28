@@ -20,22 +20,21 @@ def main_img(im_path, model, save=False):
     if frame is None:
         print("This path doesn't lead to a frame")
         sys.exit(3)
-    print("")
-    imgGridsinal, pointGrid, transform_matrix = grid_detector(
+    imgGridsFinal, pointGrid, transform_matrix = grid_detector(
         frame)
-    print("imgGridsinal")
-    print(imgGridsinal)
-    print(len(imgGridsinal[0]))
+    print("imgGridsFinal")
+    print(imgGridsFinal)
+    print(len(imgGridsFinal[0]))
     print("pointGrid")
     print(len(pointGrid[0]))
     print("transform_matrix")
     print(len(transform_matrix[0]))
     found_grid_time = time.time()
-    if imgGridsinal is None:
+    if imgGridsFinal is None:
         print("No grid found")
         sys.exit(3)
     print("Grid(s) found")
-    grids_matrix = extract_digits(imgGridsinal, model
+    grids_matrix = extract_digits(imgGridsFinal, model
                                   )
     if all(elem is None for elem in grids_matrix):
         print("Failed during digits extraction")
@@ -47,15 +46,15 @@ def main_img(im_path, model, save=False):
     if grids_solved is None:
         print("grids not solved ")
         print(grids_matrix)
-        cv2.imshow('grid_extract', imgGridsinal[0])
+        cv2.imshow('grid_extract', imgGridsFinal[0])
         cv2.imwrite(save_folder + os.path.splitext(os.path.basename(im_path))
-                    [0] + "_failed.jpg", imgGridsinal[0])
+                    [0] + "_failed.jpg", imgGridsFinal[0])
         cv2.waitKey()
         sys.exit(3)
 
     solve_time = time.time()
     ims_filled_grid = write_solved_grids(
-        imgGridsinal, grids_matrix, grids_solved)
+        imgGridsFinal, grids_matrix, grids_solved)
     im_final = recreate_img_filled(
         frame, ims_filled_grid, pointGrid, transform_matrix)
     final_time = time.time()
@@ -89,7 +88,7 @@ def main_img(im_path, model, save=False):
     # print(grid_solved)
     if len(ims_filled_grid) == 1:
         cv2.imshow('imgabc', frame)
-        cv2.imshow('grid_extract123', imgGridsinal[0])
+        cv2.imshow('grid_extract123', imgGridsFinal[0])
         cv2.imshow('grid_filled123', ims_filled_grid[0])
     cv2.imshow('im_final123', im_final)
     cv2.waitKey()

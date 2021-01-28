@@ -299,25 +299,6 @@ def solve_grids(grids):
     return finished_grids
 
 
-def verify_viable_grid(grid_tested):
-    for y in range(9):
-        for x in range(9):
-            if grid_tested[y, x] == 0:
-                continue
-            grid = grid_tested.copy()
-            grid[y, x] = 0
-            line = grid[y, :]
-            column = grid[:, x]
-            x1 = 3 * (x // 3)
-            y1 = 3 * (y // 3)
-            x2, y2 = x1 + 3, y1 + 3
-            square = grid[y1:y2, x1:x2]
-            val = grid_tested[y, x]
-            if val in line or val in column or val in square:
-                return False
-    return True
-
-
 def extract_digits_single(img, model, display=False):
     h_im, w_im = img.shape[:2]
     im_prepro, gray_enhance = processing_im_grid(img)
@@ -326,13 +307,20 @@ def extract_digits_single(img, model, display=False):
         im_prepro, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     img_digits = []
     loc_digits = []
+    i = 1
+    j = 1
     for cnt in contours:
         x, y, w, h = cv2.boundingRect(cnt)
         y_true, x_true = y + h / 2, x + w / 2
         if x_true < lim_bord or y_true < lim_bord or x_true > w_im - lim_bord or y_true > h_im - lim_bord:
+            print("i", i)
+            i = i+1
             continue
         if thresh_h_low < h < thresh_h_high and thresh_area_low < w * h < thresh_area_high:
-            if display:
+            # if there is digit inside a box grid
+            print("j", j)
+            j = j+1
+            if True:
                 cv2.drawContours(im_contours, [cnt], -1, (0, 255, 0), 1)
             y1, y2 = y - offset_y, y + h + offset_y
             border_x = max(1, int((y2 - y1 - w) / 2))
@@ -347,8 +335,11 @@ def extract_digits_single(img, model, display=False):
             loc_digits.append([y_true, x_true])
     cv2.imshow("im_contours", im_contours)
     cv2.waitKey()
+    print("img_digits", img_digits[0][0])
     img_digits_np = np.array(img_digits) / 255.0
+    print("img_digits_np", img_digits_np[0][0])
     preds_proba = model.predict(img_digits_np)
+    print("preds_proba", preds_proba)
     preds = []
     nbr_digits_extracted = 0
     adapted_thresh_conf_cnn = thresh_conf_cnn
@@ -364,17 +355,20 @@ def extract_digits_single(img, model, display=False):
         cv2.imshow("im_contours", im_contours)
         cv2.waitKey()
         return None
+    print("preds")
+    print(preds)
     grid = fill_grid(preds, loc_digits, h_im, w_im)
-    if verify_viable_grid(grid):
-        return grid
-    else:
-        return None
+    return grid
 
 
 def extract_digits(img_grids, model):
+    print("Extracting")
+    print(img_grids)
     grids = []
     for img in img_grids:
         grids.append(extract_digits_single(img, model))
+    print("grids")
+    print(grids)
     return grids
 
 
@@ -403,15 +397,26 @@ def undistorted_grids(frame, extreme_points):
     undistorted = []
     true_pointGrid = []
     transform_matrix = []
+    print("extreme_points")
+    print(extreme_points)
     for points_grid in extreme_points:
+        print("points grid")
+        print(points_grid)
         points_grid = np.array(points_grid, dtype=np.float32)
+        print(points_grid)
         final_pts = np.array(
             [[0, 0], [target_w_grid - 1, 0],
              [target_w_grid - 1, target_h_grid - 1], [0, target_h_grid - 1]],
             dtype=np.float32)
+        print("final_pts")
+        print(final_pts)
         M = cv2.getPerspectiveTransform(points_grid, final_pts)
+        print("M")
+        print(M)
         undistorted.append(cv2.warpPerspective(
             frame, M, (target_w_grid, target_h_grid)))
+        print("undistorted")
+        print(undistorted[-1])
         cv2.imshow("test", undistorted[-1])
         cv2.waitKey()
         true_pointGrid.append(points_grid)
@@ -459,13 +464,30 @@ def get_corners(preprocessed_img):
                 best_contours.append(approx)
     if not best_contours:
         return None
+    print("\n best_contours")
+    print(best_contours)
     corners = []
     for best_contour in best_contours:
+        print("\n best_contour")
+        print(best_contour)
         corners.append(find_corners(best_contour))
+    print("\n cornrs")
+    print(corners)
+    i = 1
+    j = 1
     for best_contour in best_contours:
-        cv2.drawContours(img_contours, [best_contour], 0, (0, 255, 255), 3)
+        print("best contour", i)
+        print(best_contour)
+        i = i+1
+
+        cv2.drawContours(img_contours, [best_contour], 0, (0, 0, 255), 3)
         for corner in corners:
+            print("corner", j)
+
+            print(corner)
             for point in corner:
+                print(point, j)
+                j = j+1
                 x, y = point
                 cv2.circle(img_contours, (x, y), 10, (255, 0, 0), 3)
     cv2.imshow('bestcntro', img_contours)
@@ -498,10 +520,12 @@ def preprocess_img(frame):
 
 def grid_detector(frame):
     preprocessed_img = preprocess_img(frame)
+    # get 4 most extreme points by contours
     extreme_points = get_corners(
         preprocessed_img)
     if extreme_points is None:
         return None, None, None
+    # undistorted_grids will return the image in small with only useful portion
     grids_final, pointGrid, transform_matrix = undistorted_grids(
         frame, extreme_points)
     return grids_final, pointGrid, transform_matrix
@@ -511,22 +535,25 @@ def main_img(im_path, model, save=False):
     frame = cv2.imread(im_path)
     if frame is None:
         sys.exit(3)
-    imgGridsinal, pointGrid, transform_matrix = grid_detector(
+    imgGridsFinal, pointGrid, transform_matrix = grid_detector(
         frame)
-    if imgGridsinal is None:
+    if imgGridsFinal is None:
         sys.exit(3)
-    grids_matrix = extract_digits(imgGridsinal, model)
+    grids_matrix = extract_digits(imgGridsFinal, model)
     if all(elem is None for elem in grids_matrix):
         sys.exit(3)
+    print("grids_matrix", grids_matrix)
     grids_solved = solve_grids(grids_matrix)
     if grids_solved is None:
-        cv2.imshow('grid_extract', imgGridsinal[0])
+        cv2.imshow('grid_extract', imgGridsFinal[0])
         cv2.imwrite(save_folder + os.path.splitext(os.path.basename(im_path))
-                    [0] + "_failed.jpg", imgGridsinal[0])
+                    [0] + "_failed.jpg", imgGridsFinal[0])
         cv2.waitKey()
         sys.exit(3)
+    print("grids_solved", grids_solved)
     ims_filled_grid = write_solved_grids(
-        imgGridsinal, grids_matrix, grids_solved)
+        imgGridsFinal, grids_matrix, grids_solved)
+    print("ims_filled_grid", ims_filled_grid)
     im_final = recreate_img_filled(
         frame, ims_filled_grid, pointGrid, transform_matrix)
     if save:
@@ -536,7 +563,7 @@ def main_img(im_path, model, save=False):
                     [0] + "_solved.jpg", im_final)
     if len(ims_filled_grid) == 1:
         cv2.imshow('imgabc', frame)
-        cv2.imshow('grid_extract123', imgGridsinal[0])
+        cv2.imshow('grid_extract123', imgGridsFinal[0])
         cv2.imshow('grid_filled123', ims_filled_grid[0])
     cv2.imshow('im_final123', im_final)
     cv2.waitKey()
