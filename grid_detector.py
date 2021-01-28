@@ -1,7 +1,9 @@
 import time
+
 import cv2
-from settings import *
 import numpy as np
+
+from settings import *
 
 
 def nothing(x):

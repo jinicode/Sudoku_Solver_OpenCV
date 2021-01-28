@@ -1,7 +1,9 @@
 import time
-from settings import *
+
 import cv2
 import numpy as np
+
+from settings import *
 
 color = (0, 155, 255)
 

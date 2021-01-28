@@ -1,13 +1,14 @@
 import sys
 import time
+
 import cv2
 from tensorflow.keras.models import load_model
-from settings import *
+
 from extract_digits import extract_digits
 from grid_detector import grid_detector
 from grid_solver import solve_grids
 from new_img_generator import *
-from os import walk
+from settings import *
 
 save_folder = "images_save/"
 

@@ -1,7 +1,9 @@
 import argparse
 import os
 import sys
+
 from tensorflow.keras.models import load_model
+
 images_extension = [".jpg", ".jpeg", ".png", ".bmp", ".ash"]
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
